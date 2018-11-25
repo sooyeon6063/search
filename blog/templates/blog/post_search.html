@@ -10,14 +10,31 @@
     <!--form 태그로 폼을 출력, 확인 누르면 POST 방식으로 요청을 동일한 URL로 전송-->
     <!--CSRF 공격(Cross Site Request Forgery) 출처: http://itstory.tk/entry/CSRF-공격이란-그리고-CSRF-방어-방법 [덕's IT Story]-->
     <!--csrf-token 태그를 써서 CSRF 공격을 방지-->
-    <form action="." method="post" class="centered"> {% csrf_token %}
+
+<!--실행 되는 것-->
+    <form action="." method="post"> {% csrf_token %}
         <!--form은 뷰가 넘겨준 PostSearchForm을 의미함-->
-        {{ form.as_table }}
+{#        {{ form.as_table }}#}
+        {{form | linebreaks}}
+        <br />
         <input type="submit" value="확인" />
     </form>
+    <br /><br />
+<!---->
+
+        <p class="centered"><strong>
+            <i>통합</i> 검색어를 입력하세요.
+        </strong></p>
     <br/><br/>
-    {% if object_list and search_term %}
-        <h2 class="centered">({{ search_term }})에 대한 검색 결과검색 결과</h2>
+
+        <p class="centered"><strong>
+            <i>개별</i> 검색어를 입력하세요.
+        </strong></p>
+    <!--###-->
+
+    {# 검색어 #}
+    {% if object_list and search_term and search_title and search_description and search_content and search_tag %}
+        <h2 class="centered">({{ search_term }}) ({{ search_title }}) ({{ search_description }}) ({{search_content}}) ({{search_tag}})에 대한 검색 결과</h2>
         <table id="tbl">
             <tr>
                 <th>번호</th>
@@ -42,13 +59,14 @@
             </tr>
             {% endfor %}
         </table>
-    {% elif search_term %}
+    {% elif search_term and search_title and search_description and search_content and search_tag  %}
         <p class="centered">
             <strong><i>
-                ({{ search_term }})에 대한 검색 결과가 없습니다!
+                ({{ search_term }})({{ search_title }})({{ search_description }})({{search_content}})({{search_tag}})에 대한 검색 결과가 없습니다!
             </i></strong>
         </p>
     {% endif %}
+
 </div>
 {% endblock %}
 <!--ch09 작성 종료-->

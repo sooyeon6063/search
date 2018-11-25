@@ -61,6 +61,7 @@ urlpatterns = [
 
     # Example: /search/  # ch09 1/1
     url(r'^search/$', SearchFormView.as_view(), name='search'),
+
 ]
 # 위에서 지정한 name 항목을 템플릿에서 사용할 때에는 이름공간을 포함하여,
 # blog:index, blog:post_list, blog:post_detail, blog:post_archive, ... 로 명시해야 함

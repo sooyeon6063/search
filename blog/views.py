@@ -7,7 +7,6 @@ from django.views.generic.dates import ArchiveIndexView, \
 from blog.models import Post
 from tagging.models import Tag, TaggedItem                          # ch07추가02
 from tagging.views import TaggedObjectList                          # ch07추가03
-
 # 아래 두 클래스 추가                                               # ch07추가04
 # /blog/tag/ 요청에 따라 태그 클라우드 템플릿을 출력
 # TemplateView 제네릭 뷰는 테이블 처리 없이 단순 템플릿 렌더링 처리만 담당하는 뷰
@@ -94,6 +93,11 @@ class SearchFormView(FormView):
     def form_valid(self, form) :
 	    # POST 요청의 id가 'search_word'인 값을 추출하여 변수에 저장
         schWord = '%s' % self.request.POST['search_word']
+        ###
+        schTitle = '%s' % self.request.POST['id_search_title']
+        schDescription = '%s' % self.request.POST['id_search_description']
+        schContent = '%s' % self.request.POST['id_search_content']
+        schTag = '%s' % self.request.POST['id_search_tag']
 	    # filter() 메소드의 매칭 조건을 Q 객체로 다양하게 지정 가능함
 	    # 각 조건에서 icontains 연산자는 대소문자 구별 없이
 	    # 검색어가 포함되었는지 검사
@@ -101,17 +105,59 @@ class SearchFormView(FormView):
 	    # 결국, Post 테이블의 모든 레코드에 대하여
 	    # title, description, content, tag 필드에
 	    # schWord가 포함된 레코드를 대소문자 구별 없이 검색해서 중복 없는 리스트로 저장
-        post_list = Post.objects.filter(
+
+        post_list = Post.objects.filter( # 검색어
 	        Q(title__icontains=schWord) | # schword가 icontains 포함되어 있으면
 	        Q(description__icontains=schWord) |
 	        Q(content__icontains=schWord) |
 	        Q(tag__icontains=schWord)
         ).distinct()
 
+        # post_list = Post.objects.filter(  # 검색어
+        #     Q(title__icontains=schWord) |  # schword가 icontains 포함되어 있으면
+        #     Q(description__icontains=schDescription) |
+        #     Q(content__icontains=schContent) |
+        #     Q(tag__icontains=schTag)
+        # ).distinct()
+
+        post_list = Post.objects.filter(  # 제목
+            Q(title__icontains=schTitle) |
+            Q(description__icontains=schTitle) |
+            Q(content__icontains=schTitle) |
+            Q(tag__icontains=schTitle)
+        ).distinct()
+
+        post_list = Post.objects.filter(  # 요약
+            Q(title__icontains=schDescription) |
+            Q(description__icontains=schDescription) |
+            Q(content__icontains=schDescription) |
+            Q(tag__icontains=schDescription)
+        ).distinct()
+
+        post_list = Post.objects.filter(  # 내용
+            Q(title__icontains=schContent) |
+            Q(description__icontains=schContent) |
+            Q(content__icontains=schContent) |
+            Q(tag__icontains=schContent)
+        ).distinct()
+
+        post_list = Post.objects.filter(  # 태그
+            Q(title__icontains=schTag) |
+            Q(description__icontains=schTag) |
+            Q(content__icontains=schTag) |
+            Q(tag__icontains=schTag)
+        ).distinct()
+
         # 템플릿에 전달할 맥락 변수 context를 사전 형식으로 정의
         context = {}
         context['form'] = form  # 여기서 form은 PostSearchForm을 지칭함
         context['search_term'] = schWord
+        ###
+        context['search_title'] = schTitle
+        context['search_description'] = schDescription
+        context['search_content'] = schContent
+        context['search_tag'] = schTag
+        ###
         context['object_list'] = post_list
 
 		# 단축 함수 render()는 템플릿과 맥락 변수를 처리하여,

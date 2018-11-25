@@ -8,5 +8,11 @@ class PostSearchForm(forms.Form):
     # CharField는 TextInput 위젯으로 표현됨
     # TextInput 위젯 앞에 label이 표시되고,
     # 변수 search_word는 입력 필드에 대한 id 역할
-    search_word = forms.CharField(label='검색어')
+    search_word = forms.CharField(label='전체 검색어')
+    id_search_title= forms.CharField(label='제목 검색어')
+    id_search_description = forms.CharField(label='요약 검색어')
+    id_search_content = forms.CharField(label='내용 검색어')
+    id_search_tag = forms.CharField(label='태그 검색어')
+
+
 # ch09 1/1 추가 종료
